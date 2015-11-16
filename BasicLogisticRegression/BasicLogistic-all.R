@@ -1,11 +1,11 @@
 # This script does a basic logistic regression on all the data per category and
-# see what we get. Uses only 2014 data for training.
+# see what we get. Uses all data for training.
 
 source("logistic_utilities.R")
 source("../lib/crime_utilities.R")
 library(scatterplot3d)
 
-crime_data_no_outlier <- read_crime_data("/Users/christopherhowlin/Documents/DataScience/Datasets/SFCrime/train-no-outlier_2014.csv")
+crime_data_no_outlier <- read_crime_data("/Users/christopherhowlin/Documents/DataScience/Datasets/SFCrime/train-no-outlier.csv")
 crime_data_working <- crime_data_no_outlier
 
 crime_data_working$Descript <- NULL
@@ -29,7 +29,6 @@ hist(crime.assault$Times)
 
 scatterplot3d(crime.larceny$X, crime.larceny$Y, crime.larceny$Times, main="3D Scatterplot")
 
-crime.test <- read.csv("/Users/christopherhowlin/Documents/DataScience/Datasets/SFCrime/test.csv", header = T, comment.char = "#")
 crime.test <- read_crime_data("/Users/christopherhowlin/Documents/DataScience/Datasets/SFCrime/test.csv")
 
 predict.df <- crime.test$Id
@@ -47,6 +46,6 @@ colnames(predict.df) <- c("Id", levels(crime_data_working$Category))
 options(digits = 10)
 options(scipen=999)
 
-fileConn<-file("/Users/christopherhowlin/Documents/DataScience/Project/SFCrime_Kaggle/BasicLogisticRegression/submissionBasic-2014.csv", open="w")
+fileConn<-file("/Users/christopherhowlin/Documents/DataScience/Project/SFCrime_Kaggle/BasicLogisticRegression/submissionBasic-all.csv", open="w")
 write.csv(predict.df, fileConn, row.names=F, quote=F)
 close(fileConn)
