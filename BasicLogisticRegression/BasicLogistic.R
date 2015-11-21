@@ -29,7 +29,6 @@ hist(crime.assault$Times)
 
 scatterplot3d(crime.larceny$X, crime.larceny$Y, crime.larceny$Times, main="3D Scatterplot")
 
-crime.test <- read.csv("/Users/christopherhowlin/Documents/DataScience/Datasets/SFCrime/test.csv", header = T, comment.char = "#")
 crime.test <- read_crime_data("/Users/christopherhowlin/Documents/DataScience/Datasets/SFCrime/test.csv")
 
 predict.df <- crime.test$Id
