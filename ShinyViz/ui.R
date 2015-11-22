@@ -13,10 +13,11 @@ shinyUI(fluidPage(
     sidebarPanel(
       helpText("A density plot of the San Francisco crime categories in 2014."),
 
-      selectInput("category_select", "Select crime category", choices=get_category_levels())
+      selectInput("category_select", "Select crime category", choices=get_category_levels()),
 
       # Selection by hour to come later...
-      # sliderInput("hour_slide", "Hour", min=0, max=23, value=12, step=1)
+      sliderInput("hour_slide", "Hour", min=0, max=23, value=12, step=1),
+      sliderInput("dow_slide", "Day of week", min=1, max=7, value=1)
     ),
 
     mainPanel(plotOutput("plot"))

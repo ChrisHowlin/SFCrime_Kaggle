@@ -15,10 +15,28 @@ shinyServer(function(input, output) {
 
   output$plot <- renderPlot({
 
+    # Build filters
+    hour_filter <- which(crime_data_no_outlier$Hour == input$hour_slide)
+    category_filter <- which(crime_data_no_outlier$Category==input$category_select)
+
+    # Match dow
+    dow <- switch(input$dow_slide,
+                   '1' = 'Monday',
+                   '2' = 'Tuesday',
+                   '3' = 'Wednesday',
+                   '4' = 'Thursday',
+                   '5' = 'Friday',
+                   '6' = 'Saturday',
+                   '7' = 'Sunday')
+
+    dow_filter <- which(crime_data_no_outlier$DayOfWeek==dow)
+
+    combined_filter <- intersect(intersect(hour_filter, category_filter),
+                                  dow_filter)
     # Bloc
     SF_base_map + stat_density2d(
       aes(x = X, y = Y, fill = ..level..,  alpha = ..level..),
-      size = 2, bins = 4, data = crime_data_no_outlier[which(crime_data_no_outlier$Category==input$category_select),],
+      size = 2, bins = 4, data = crime_data_no_outlier[combined_filter,],
       geom = "polygon"
     ) +
       scale_fill_gradient(low = "black", high = "red")
