@@ -16,6 +16,7 @@ read_crime_data <- function(filename)
   crime_data$Year <- datesLT$year
   crime_data$Month <- datesLT$mon
   crime_data$Times <- (datesLT$hour*60 + datesLT$min)
+  crime_data$Hour <- datesLT$hour
   crime_data$X_bin <- bin_coordinate_data(crime_data$X, 100)
   crime_data$Y_bin <- bin_coordinate_data(crime_data$Y, 100)
 
