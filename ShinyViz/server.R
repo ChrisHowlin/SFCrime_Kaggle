@@ -1,9 +1,9 @@
 # server.R
 
 library(ggmap)
-source("../lib/crime_utilities.R")
+source("crime_utilities.R")
 # Just using the 2014 data to start with (quicker to plot)
-crime_data_no_outlier <- read_crime_data("/Users/christopherhowlin/Documents/DataScience/Datasets/SFCrime/train-no-outlier_2014.csv")
+crime_data_no_outlier <- read_crime_data("data/train-no-outlier_2014.csv")
 
 theme_set(theme_bw(16))
 # Reload the map fresh...
