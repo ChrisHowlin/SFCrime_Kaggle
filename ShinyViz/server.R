@@ -13,32 +13,67 @@ SF_base_map <- readRDS('data/SF_base_map.rds') # Save data locally so we don't h
 
 shinyServer(function(input, output) {
 
+  get_category_filter <- reactive({
+    which(crime_data_no_outlier$Category==input$category_select)
+  })
+
+  get_hour_filter <- reactive({
+    which(crime_data_no_outlier$Hour == input$hour_slide)
+  })
+
+  get_dow_filter <- reactive({
+    # Match dow
+    dow <- switch(input$dow_slide,
+                  '1' = 'Monday',
+                  '2' = 'Tuesday',
+                  '3' = 'Wednesday',
+                  '4' = 'Thursday',
+                  '5' = 'Friday',
+                  '6' = 'Saturday',
+                  '7' = 'Sunday')
+
+    dow_filter <- which(crime_data_no_outlier$DayOfWeek==dow)
+  })
+
+  get_combined_filter <- reactive({
+
+    # Build filters
+    category_filter <- get_category_filter()
+
+    combined_filter <- category_filter
+    if(input$hour_check)
+    {
+      hour_filter <- get_hour_filter()
+      combined_filter <- intersect(combined_filter, hour_filter)
+    }
+
+    if(input$dow_check)
+    {
+      combined_filter <- intersect(combined_filter, dow_filter)
+      dow_filter <- get_dow_filter()
+    }
+
+    return (combined_filter)
+  })
+
   output$plot <- renderPlot({
 
     # Build filters
-    hour_filter <- which(crime_data_no_outlier$Hour == input$hour_slide)
-    category_filter <- which(crime_data_no_outlier$Category==input$category_select)
+    map_filter <- get_combined_filter()
 
-    # Match dow
-    dow <- switch(input$dow_slide,
-                   '1' = 'Monday',
-                   '2' = 'Tuesday',
-                   '3' = 'Wednesday',
-                   '4' = 'Thursday',
-                   '5' = 'Friday',
-                   '6' = 'Saturday',
-                   '7' = 'Sunday')
-
-    dow_filter <- which(crime_data_no_outlier$DayOfWeek==dow)
-
-    combined_filter <- intersect(intersect(hour_filter, category_filter),
-                                  dow_filter)
     # Bloc
-    SF_base_map + stat_density2d(
-      aes(x = X, y = Y, fill = ..level..,  alpha = ..level..),
-      size = 2, bins = 4, data = crime_data_no_outlier[combined_filter,],
-      geom = "polygon"
-    ) +
-      scale_fill_gradient(low = "black", high = "red")
+    if(length(map_filter) > 0)
+    {
+      SF_base_map + stat_density2d(
+        aes(x = X, y = Y, fill = ..level..,  alpha = ..level..),
+        size = 2, bins = 4, data = crime_data_no_outlier[map_filter,],
+        geom = "polygon"
+      ) +
+        scale_fill_gradient(low = "black", high = "red")
+    }
+    else
+    {
+      SF_base_map
+    }
   })
 })

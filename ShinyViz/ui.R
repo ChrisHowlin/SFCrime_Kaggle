@@ -16,7 +16,9 @@ shinyUI(fluidPage(
       selectInput("category_select", "Select crime category", choices=get_category_levels()),
 
       # Selection by hour to come later...
+      checkboxInput("hour_check", "Enable filter by hour", value = F),
       sliderInput("hour_slide", "Hour", min=0, max=23, value=12, step=1),
+      checkboxInput("dow_check", "Enable filter by day of week", value = F),
       sliderInput("dow_slide", "Day of week", min=1, max=7, value=1)
     ),
 
