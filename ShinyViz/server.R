@@ -3,7 +3,7 @@
 library(ggmap)
 source("crime_utilities.R")
 # Just using the 2014 data to start with (quicker to plot)
-crime_data_no_outlier <- read_crime_data("data/train-no-outlier_2014.csv")
+crime_data_no_outlier <- read_crime_data("data/train-no-outlier.csv")
 
 theme_set(theme_bw(16))
 # Reload the map fresh...
@@ -49,8 +49,8 @@ shinyServer(function(input, output) {
 
     if(input$dow_check)
     {
-      combined_filter <- intersect(combined_filter, dow_filter)
       dow_filter <- get_dow_filter()
+      combined_filter <- intersect(combined_filter, dow_filter)
     }
 
     return (combined_filter)
