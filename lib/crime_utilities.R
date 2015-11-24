@@ -6,6 +6,7 @@ read_crime_data <- function(filename)
   if(!is.null(crime_data$Category))
   {
     crime_data$Category <- as.factor(crime_data$Category)
+    levels(crime_data$Category) <- get_category_levels()
   }
 
   crime_data$PdDistrict <- as.factor(crime_data$PdDistrict)
@@ -15,6 +16,7 @@ read_crime_data <- function(filename)
   crime_data$Year <- datesLT$year
   crime_data$Month <- datesLT$mon
   crime_data$Times <- (datesLT$hour*60 + datesLT$min)
+  crime_data$Hour <- datesLT$hour
   crime_data$X_bin <- bin_coordinate_data(crime_data$X, 100)
   crime_data$Y_bin <- bin_coordinate_data(crime_data$Y, 100)
 
@@ -27,7 +29,7 @@ bin_coordinate_data <- function(coords, num_bins)
   max <- max(coords)
   bucket_size <- (max - min) / num_bins
 
-  ceiling(coords / bucket_size)
+  ceiling((coords-min) / bucket_size)
 }
 
 get_category_levels_array <- function(x)
@@ -54,10 +56,13 @@ normalise_distribution_by_row <- function(distribution, normalization_target = 1
   row_sums.total <- rowSums(distribution)
   row_sums.normalised <- normalization_target / row_sums.total
   normalized_distribution <- distribution
-  for(row in 1:nrow(distribution))
-  {
-    normalized_distribution[row,] <- distribution[row,] * row_sums.normalised[row]
-  }
+
+  normalized_distribution <- distribution * row_sums.normalised
+
+#   for(row in 1:nrow(distribution))
+#   {
+#     normalized_distribution[row,] <- distribution[row,] * row_sums.normalised[row]
+#   }
 
   return(normalized_distribution)
 }

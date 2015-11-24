@@ -4,7 +4,7 @@
 #  - ggmap for the map plotting functions
 
 library(shiny)
-source("crime_utilities.R")
+source("lib/crime_utilities.R")
 
 shinyUI(fluidPage(
   titlePanel("San Francisco Crime Data Visualisation"),
